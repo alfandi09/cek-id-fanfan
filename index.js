@@ -36,7 +36,7 @@ app.get('/api/game/:game', cekIdGameController);
 app.get('/api/game/get-zone/:game', getZoneController);
 
 app.get('/*', (req, res) => {
-   res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
+   res.status(404).json({ error: 'Not Found' });
 });
 
 app.listen(port, () => {
