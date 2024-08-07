@@ -27,7 +27,7 @@ app.get('/api', (req, res) => {
 
    return res.json({
       name: 'Cek Data Game',
-      author: 'KITADIGITAL',
+      author: 'FANFANSTORE',
       data: _.orderBy(newDataGame, ['name'], ['asc']),
    });
 });
