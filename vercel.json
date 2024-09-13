@@ -10,5 +10,25 @@
         "src": "/(.*)",
         "dest": "index.js"
       }
+  ],
+  "headers": [
+    {
+      "source": "/api/**",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400" // Cache 1 hari
+        }
+      ]
+    },
+    {
+      "source": "/static/**",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000" // Cache file statis selama 1 tahun
+        }
+      ]
+    }
   ]
 }
