@@ -17,7 +17,7 @@ app.use(cors());
 
 // Route untuk mendapatkan status monitor dari UptimeRobot
 app.get('/api/status', async (req, res) => {
-   const apiKey = 'API_KEY_KAMU';  // Ganti dengan API Key UptimeRobot
+   const apiKey = 'u2676864-dd8bebdddcf0bf35aaa98839';  // Ganti dengan API Key UptimeRobot
 
    try {
       const response = await axios.post('https://api.uptimerobot.com/v2/getMonitors', {
