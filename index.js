@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const { cekIdGameController } = require('./controllers/cekIdGameController');
 const _ = require('lodash');
+const path = require('path');
 const { dataGame } = require('./lib/dataGame');
 const getZoneController = require('./controllers/getZoneController');
 
