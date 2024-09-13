@@ -1,1 +1,64 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status Monitor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            text-align: center;
+        }
+        .monitor {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .up {
+            color: green;
+        }
+        .down {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Status Monitor</h1>
+    <div id="monitor-list"></div>
+
+    <script>
+        // Mendapatkan data status dari API
+        fetch('/api/status')
+            .then(response => response.json())
+            .then(data => {
+                const monitorList = document.getElementById('monitor-list');
+                const monitors = data.monitors;
+
+                monitors.forEach(monitor => {
+                    const monitorDiv = document.createElement('div');
+                    monitorDiv.className = 'monitor';
+
+                    const monitorStatus = monitor.status === 2 ? 'Up' : 'Down';
+                    const statusClass = monitor.status === 2 ? 'up' : 'down';
+
+                    monitorDiv.innerHTML = `
+                        <h3>${monitor.friendly_name}</h3>
+                        <p>Status: <span class="${statusClass}">${monitorStatus}</span></p>
+                        <p>Type: ${monitor.type}</p>
+                    `;
+
+                    monitorList.appendChild(monitorDiv);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('monitor-list').innerText = 'Failed to load status data.';
+            });
+    </script>
+</body>
+</html>
