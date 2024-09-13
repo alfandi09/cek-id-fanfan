@@ -15,23 +15,6 @@ app.use(express.static('public'));
 //app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
-// Route untuk mendapatkan status monitor dari UptimeRobot
-app.get('/api/status', async (req, res) => {
-   const apiKey = 'u2676864-dd8bebdddcf0bf35aaa98839';  // Ganti dengan API Key UptimeRobot
-
-   try {
-      const response = await axios.post('https://api.uptimerobot.com/v2/getMonitors', {
-         api_key: apiKey,
-         format: 'json',
-      });
-
-      // Mengirim data monitor ke frontend
-      return res.json(response.data);
-   } catch (error) {
-      return res.status(500).json({ error: 'Gagal mendapatkan status monitor' });
-   }
-});
-
 app.get('/api', (req, res) => {
    const newDataGame = dataGame.map((item) => {
       return {
