@@ -36,9 +36,9 @@ const fetch = require('node-fetch');
             ...a[i],
             slug: a[i].slug+"-dg",
             isZone:
-               data.data.isZoneId == 0 && data.data.serverIdOptions
+               data.data?.isZoneId == 0 && data.data?.serverIdOptions
                   ? true
-                  : !data.data.serverIdOptions && data.data.isZoneId == 1
+                  : !data.data?.serverIdOptions && data.data?.isZoneId == 1
                   ? true
                   : false,
             dropdown: data.data.serverIdOptions?.map((item) => {
