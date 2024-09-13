@@ -35,6 +35,8 @@ app.get('/api', (req, res) => {
 app.get('/api/game/:game', cekIdGameController);
 app.get('/api/game/get-zone/:game', getZoneController);
 
+app.use(express.static(path.join(__dirname, 'public'))); // untuk melayani file statis dari folder 'public'
+
 app.get('/*', (req, res) => {
    ;res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
