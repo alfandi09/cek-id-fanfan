@@ -14,7 +14,6 @@ app.use(express.json());
 app.use(express.static('public'));
 //app.use(express.urlencoded({ extended: false }));
 app.use(cors());
-
 const cache = {};
 const cacheExpiry = 24 * 60 * 60 * 1000; // 1 hari dalam milidetik
 
