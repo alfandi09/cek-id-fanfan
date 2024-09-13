@@ -17,7 +17,7 @@
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=86400" // Cache 1 hari
+          "value": "public, max-age=86400"
         }
       ]
     },
