@@ -20,6 +20,7 @@
     "fs": "^0.0.1-security",
     "lodash": "^4.17.21",
     "node-fetch": "^2.6.9",
-    "slugify": "^1.6.5"
+    "slugify": "^1.6.5",
+    "axios": "^1.7.3"
   }
 }
