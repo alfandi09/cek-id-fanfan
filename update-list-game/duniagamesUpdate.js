@@ -41,7 +41,7 @@ const fetch = require('node-fetch');
                   : !data.data?.serverIdOptions && data.data?.isZoneId == 1
                   ? true
                   : false,
-            dropdown: data.data.serverIdOptions?.map((item) => {
+            dropdown: data.data?.serverIdOptions?.map((item) => {
                return {
                   id: item.optionValue,
                   name: item.optionText,
