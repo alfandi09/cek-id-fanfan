@@ -15,7 +15,18 @@ app.use(express.static('public'));
 //app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
+const cache = {};
+const cacheExpiry = 24 * 60 * 60 * 1000; // 1 hari dalam milidetik
+
 app.get('/api', (req, res) => {
+   const currentTime = Date.now();
+
+   // Jika ada cache dan belum kadaluarsa, gunakan cache
+   if (cache['/api'] && (currentTime - cache['/api'].timestamp < cacheExpiry)) {
+      console.log('Mengambil dari cache');
+      return res.json(cache['/api'].data);
+   }
+   // Jika tidak ada cache atau sudah kadaluarsa, buat respons baru
    const newDataGame = dataGame.map((item) => {
       return {
          name: item.name,
@@ -27,12 +38,19 @@ app.get('/api', (req, res) => {
       };
    });
 
-   return res.json({
+   const response = {
       name: 'Cek Data Game',
       author: 'FANFANSTORE',
       data: _.orderBy(newDataGame, ['name'], ['asc']),
-   });
+   };
+   // Simpan data baru dan waktu cache
+   cache['/api'] = {
+      data: response,
+      timestamp: currentTime, // waktu penyimpanan cache
+   };
+   res.json(response);
 });
+
 
 app.get('/api/game/:game', cekIdGameController);
 app.get('/api/game/get-zone/:game', getZoneController);
