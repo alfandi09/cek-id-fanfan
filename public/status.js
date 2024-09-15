@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { createRoot } from 'react-dom/client'
 import { Search, BarChart2, Users, Database, Settings, LogOut, Menu, X } from 'lucide-react';
 
 const gameData = [
