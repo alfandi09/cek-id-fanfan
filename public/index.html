@@ -444,7 +444,7 @@ function updatePagination() {
 
     // Add "Previous" button
     const prevButton = document.createElement('button');
-    prevButton.innerText = 'Prev';
+    prevButton.innerText = '<';
     prevButton.disabled = currentPage === 1;
     prevButton.addEventListener('click', () => {
         if (currentPage > 1) {
@@ -513,7 +513,7 @@ function updatePagination() {
 
     // Add "Next" button
     const nextButton = document.createElement('button');
-    nextButton.innerText = 'Next';
+    nextButton.innerText = '>';
     nextButton.disabled = currentPage === totalPages;
     nextButton.addEventListener('click', () => {
         if (currentPage < totalPages) {
