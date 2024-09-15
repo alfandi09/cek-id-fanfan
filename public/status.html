@@ -372,31 +372,33 @@
     <script>
         // Function to populate the game table with real data from API
         async function populateGameTable() {
-            const tableBody = document.getElementById('gameTableBody');
-            tableBody.innerHTML = '';
+    const tableBody = document.getElementById('gameTableBody');
+    tableBody.innerHTML = ''; // Membersihkan tabel sebelum menambah data
 
-            try {
-                // Fetching real data from your API endpoint
-                const response = await fetch('/api'); // Ganti dengan URL API Anda
-                const data = await response.json();
-                
-                // Assuming data is an array of games
-                data.data.forEach(game => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${game.name}</td>
-                        <td>${game.slug}</td>
-                        <td>${game.query}</td>
-                        <td>${game.endpoint}</td>
-                        <td><span class="status ${game.hasZoneId ? 'active' : 'inactive'}">${game.hasZoneId ? 'Yes' : 'No'}</span></td>
-                        <td>${game.listZoneId ? game.listZoneId : 'N/A'}</td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-            } catch (error) {
-                console.error('Error fetching game data:', error);
-            }
-        }
+    try {
+        // Fetching real data from your API endpoint
+        const response = await fetch('/api'); // Ganti dengan URL API Anda
+        const responseData = await response.json();
+
+        // Assuming data is an array of games
+        responseData.data.forEach(game => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${game.name || 'N/A'}</td>
+                <td>${game.slug || 'N/A'}</td>
+                <td>${game.query || 'N/A'}</td>
+                <td>${game.endpoint || 'N/A'}</td>
+                <td><span class="status ${game.hasZoneId ? 'active' : 'inactive'}">${game.hasZoneId ? 'Yes' : 'No'}</span></td>
+                <td>${game.listZoneId !== null ? game.listZoneId : 'N/A'}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    } catch (error) {
+        console.error('Error fetching game data:', error);
+        tableBody.innerHTML = '<tr><td colspan="6">Failed to load data</td></tr>'; // Menampilkan pesan error di tabel
+    }
+}
+
 
         // Function to toggle sidebar
         function toggleSidebar() {
