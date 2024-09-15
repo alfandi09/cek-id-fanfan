@@ -399,7 +399,7 @@
 
         async function fetchGames() {
             try {
-                const response = await fetch('https://api.omegatronik.co.id');
+                const response = await fetch('https://api.omegatronik.co.id'); //cek-id-fanfan.vercel.app/api
                 const jsonResponse = await response.json();
                 allGames = jsonResponse.data;
                 filteredGames = [...allGames];
