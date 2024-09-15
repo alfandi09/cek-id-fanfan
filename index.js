@@ -17,6 +17,25 @@ app.use(cors());
 const cache = {};
 const cacheExpiry = 24 * 60 * 60 * 1000; // 1 hari dalam milidetik
 
+const apiHits = {};
+
+// Middleware untuk menghitung hit API
+app.use((req, res, next) => {
+   const route = req.path;
+   // Jika route sudah ada di apiHits, tambah 1, jika belum, set ke 1
+   if (apiHits[route]) {
+      apiHits[route] += 1;
+   } else {
+      apiHits[route] = 1;
+   }
+   next();
+});
+
+// Route untuk mengambil total API hits
+app.get('/api/total-hits', (req, res) => {
+   res.json({ totalHits: apiHits });
+});
+
 app.get('/api', (req, res) => {
    const currentTime = Date.now();
 
