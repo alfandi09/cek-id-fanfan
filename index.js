@@ -54,6 +54,17 @@ app.get('/api', (req, res) => {
 app.get('/api/game/:game', cekIdGameController);
 app.get('/api/game/get-zone/:game', getZoneController);
 
+app.get("/api/bank", checkReferer, async (req, res) => {
+  try {
+    const response = await axios.get(
+      "https://api-rekening.lfourr.com/listBank"
+    );
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching bank data" });
+  }
+});
+
 app.use(express.static(path.join(__dirname, 'public'))); // untuk melayani file statis dari folder 'public'
 
 app.get('/*', (req, res) => {
