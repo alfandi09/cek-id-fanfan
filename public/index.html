@@ -351,8 +351,8 @@
                     <p>Total Game</p>
                 </div>
                 <div class="stat-card">
-                    <h3>$215,542</h3>
-                    <p>Total Pendapatan</p>
+                    <h3 id="totalApiHits">Loading...</h3>
+                    <p>Total Request API</p>
                 </div>
                 <div class="stat-card">
                     <h3>65%</h3>
@@ -413,6 +413,18 @@
                 document.getElementById('gameTableBody').innerHTML = '<tr><td colspan="6">Error memuat data</td></tr>';
             }
         }
+
+        async function fetchApiHits() {
+    try {
+        const response = await fetch('https://cek-id-fanfan.vercel.app/api/total-hits'); // Ganti dengan API yang benar
+        const jsonResponse = await response.json();
+        const totalHits = jsonResponse.totalHits; // Pastikan ini sesuai dengan struktur respons API
+        document.getElementById('totalApiHits').innerText = totalHits;
+    } catch (error) {
+        console.error('Error fetching API hits:', error);
+        document.getElementById('totalApiHits').innerText = 'Error';
+    }
+}
 
         function updateTable() {
             const tableBody = document.getElementById('gameTableBody');
