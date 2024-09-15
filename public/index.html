@@ -347,7 +347,7 @@
                     <p>Pemain Baru</p>
                 </div>
                 <div class="stat-card">
-                    <h3>200</h3>
+                    <h3 id="totalGamesCount">0</h3>
                     <p>Total Game</p>
                 </div>
                 <div class="stat-card">
@@ -406,6 +406,7 @@
                 const jsonResponse = await response.json();
                 allGames = jsonResponse.data;
                 filteredGames = [...allGames];
+                document.getElementById('totalGamesCount').textContent = allGames.length;
                 updateTable();
             } catch (error) {
                 console.error('Error mengambil data game:', error);
