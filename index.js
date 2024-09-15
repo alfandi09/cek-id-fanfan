@@ -54,7 +54,7 @@ app.get('/api', (req, res) => {
 app.get('/api/game/:game', cekIdGameController);
 app.get('/api/game/get-zone/:game', getZoneController);
 
-app.get("/api/bank", checkReferer, async (req, res) => {
+app.get("/api/bank", async (req, res) => {
   try {
     const response = await axios.get(
       "https://api-rekening.lfourr.com/listBank"
