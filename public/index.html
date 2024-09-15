@@ -437,8 +437,7 @@
 
             updatePagination();
         }
-
-        function updatePagination() {
+function updatePagination() {
     const totalPages = Math.ceil(filteredGames.length / entriesPerPage);
     const paginationElement = document.getElementById('pagination');
     paginationElement.innerHTML = '';
@@ -524,6 +523,7 @@
     });
     paginationElement.appendChild(nextButton);
 }
+      
 
         function filterGames(searchTerm) {
             filteredGames = allGames.filter(game => 
