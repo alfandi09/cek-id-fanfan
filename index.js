@@ -73,7 +73,7 @@ app.get('/api', (req, res) => {
 app.get('/api/game/:game', cekIdGameController);
 app.get('/api/game/get-zone/:game', getZoneController);
 
-/////////////////////////////////BANK////////////////////////////////////////////
+
 app.get("/api/bank", async (req, res) => {
   try {
     const response = await axios.get(
@@ -85,7 +85,6 @@ app.get("/api/bank", async (req, res) => {
   }
 });
 
-////////////////////////////////////////////////////////////////////////////////////
 
 
 app.use(express.static(path.join(__dirname, 'public'))); // untuk melayani file statis dari folder 'public'
