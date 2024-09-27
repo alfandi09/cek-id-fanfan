@@ -73,6 +73,7 @@ app.get('/api', (req, res) => {
 app.get('/api/game/:game', cekIdGameController);
 app.get('/api/game/get-zone/:game', getZoneController);
 
+/////////////////////////////////BANK////////////////////////////////////////////
 app.get("/api/bank", async (req, res) => {
   try {
     const response = await axios.get(
@@ -83,6 +84,26 @@ app.get("/api/bank", async (req, res) => {
     res.status(500).json({ message: "Error fetching bank data" });
   }
 });
+
+app.get("/api/bankAccount", async (req, res) => {
+  const { bankCode, accountNumber } = req.query;
+
+  if (!bankCode || !accountNumber) {
+    return res.status(400).json({ message: "Missing bankCode or accountNumber" });
+  }
+
+  try {
+    const response = await axios.get(
+      `https://api-rekening.lfourr.com/getBankAccount?bankCode=${bankCode}&accountNumber=${accountNumber}`
+    );
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching bank account data" });
+  }
+});
+
+////////////////////////////////////////////////////////////////////////////////////
+
 
 app.use(express.static(path.join(__dirname, 'public'))); // untuk melayani file statis dari folder 'public'
 
