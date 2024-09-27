@@ -77,13 +77,31 @@ app.get('/api/game/get-zone/:game', getZoneController);
 app.get("/api/bank", async (req, res) => {
   try {
     const response = await axios.get(
-      "https://api-rekening.lfourr.com/listBank"
+      "https://api-rekening.lfourr.com/listEwallet"
     );
     res.json(response.data);
   } catch (error) {
     res.status(500).json({ message: "Error fetching bank data" });
   }
 });
+
+app.get("/api/bankAccount", async (req, res) => {
+  const { bankCode, accountNumber } = req.query;
+
+  if (!bankCode || !accountNumber) {
+    return res.status(400).json({ message: "Missing bankCode or accountNumber" });
+  }
+
+  try {
+    const response = await axios.get(
+      `https://api-rekening.lfourr.com/getEwalletAccount?bankCode=${bankCode}&accountNumber=${accountNumber}`
+    );
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching bank account data" });
+  }
+});
+
 
 
 
