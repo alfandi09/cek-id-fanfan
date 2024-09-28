@@ -134,7 +134,7 @@ app.get("/api/bankaccount", async (req, res) => {
 app.use(express.static(path.join(__dirname, 'public'))); // untuk melayani file statis dari folder 'public'
 
 app.get('/*', (req, res) => {
-   ;res.sendFile(path.join(__dirname, 'public', 'index.html'));
+   ;res.sendFile(path.join(__dirname, 'public', 'index.js'));
 });
 
 app.listen(port, () => {
