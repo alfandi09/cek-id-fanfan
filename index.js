@@ -111,41 +111,36 @@ app.get("/api/ewalletaccount", async (req, res) => {
       const { bankcode, accountnumber, accountname } = response.data.data;
 
       // Cek apakah data sudah ada di database
-      const { data: existingData, error: selectError } = await supabase
+      const { data: existingData, error: checkError } = await supabase
         .from('ewallet_accounts')
-        .select('*')
-        .eq('bank_code', bankcode)
+        .select('id')
         .eq('account_number', accountnumber)
         .single();
 
-      if (selectError && selectError.code !== 'PGRST116') {
-        // Tangani error dari query select kecuali jika data tidak ditemukan
-        console.error('Error fetching data from Supabase:', selectError);
-        return res.status(500).json({ message: "Error fetching data from database" });
+      if (checkError) {
+        console.error('Error checking data in Supabase:', checkError);
+        return res.status(500).json({ message: "Error checking data in database" });
       }
 
-      if (existingData) {
-        // Jika data sudah ada, kembalikan respon tanpa menambahkan ke database
-        return res.status(200).json({ message: "Data already exists", data: existingData });
+      // Jika data belum ada, simpan ke database
+      if (!existingData) {
+        const { error: insertError } = await supabase
+          .from('ewallet_accounts')
+          .insert([
+            {
+              bank_code: bankcode,
+              account_number: accountnumber,
+              account_name: accountname
+            }
+          ]);
+
+        if (insertError) {
+          console.error('Error inserting data to Supabase:', insertError);
+          return res.status(500).json({ message: "Error saving data to database" });
+        }
       }
 
-      // Simpan data baru ke Supabase
-      const { data, error: insertError } = await supabase
-        .from('ewallet_accounts')
-        .insert([
-          { 
-            bank_code: bankcode, 
-            account_number: accountnumber, 
-            account_name: accountname 
-          }
-        ]);
-
-      if (insertError) {
-        console.error('Error inserting data to Supabase:', insertError);
-        return res.status(500).json({ message: "Error saving data to database" });
-      }
-
-      // Kembalikan response API eksternal
+      // Tetap kembalikan response API eksternal tanpa mengubah format JSON
       return res.json(response.data);
     } else {
       // Jika API eksternal mengembalikan status false
