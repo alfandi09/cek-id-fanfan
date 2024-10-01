@@ -110,47 +110,43 @@ app.get("/api/ewalletaccount", async (req, res) => {
     if (response.data.status) {
       const { bankcode, accountnumber, accountname } = response.data.data;
 
-      // Cek apakah data sudah ada di Supabase
-      const { data: existingData, error: fetchError } = await supabase
+      // Cek apakah data sudah ada di database
+      const { data: existingData, error: selectError } = await supabase
         .from('ewallet_accounts')
         .select('*')
         .eq('bank_code', bankcode)
-        .eq('account_number', accountnumber);
+        .eq('account_number', accountnumber)
+        .single();
 
-      if (fetchError) {
-        console.error('Error fetching data from Supabase:', fetchError);
-        return res.status(500).json({ message: "Error checking existing data in database" });
+      if (selectError && selectError.code !== 'PGRST116') {
+        // Tangani error dari query select kecuali jika data tidak ditemukan
+        console.error('Error fetching data from Supabase:', selectError);
+        return res.status(500).json({ message: "Error fetching data from database" });
       }
 
-      // Jika data belum ada, lakukan insert
-      if (existingData.length === 0) {
-        const { data, error } = await supabase
-          .from('ewallet_accounts')
-          .insert([
-            { 
-              bank_code: bankcode, 
-              account_number: accountnumber, 
-              account_name: accountname 
-            }
-          ]);
-
-        if (error) {
-          console.error('Error inserting data to Supabase:', error);
-          return res.status(500).json({ message: "Error saving data to database" });
-        }
-
-        // Kembalikan response API eksternal
-        return res.json({
-          message: "Data saved successfully",
-          data: response.data
-        });
-      } else {
-        // Jika data sudah ada
-        return res.json({
-          message: "Data already exists, no need to save",
-          data: existingData[0] // Mengembalikan data yang sudah ada
-        });
+      if (existingData) {
+        // Jika data sudah ada, kembalikan respon tanpa menambahkan ke database
+        return res.status(200).json({ message: "Data already exists", data: existingData });
       }
+
+      // Simpan data baru ke Supabase
+      const { data, error: insertError } = await supabase
+        .from('ewallet_accounts')
+        .insert([
+          { 
+            bank_code: bankcode, 
+            account_number: accountnumber, 
+            account_name: accountname 
+          }
+        ]);
+
+      if (insertError) {
+        console.error('Error inserting data to Supabase:', insertError);
+        return res.status(500).json({ message: "Error saving data to database" });
+      }
+
+      // Kembalikan response API eksternal
+      return res.json(response.data);
     } else {
       // Jika API eksternal mengembalikan status false
       return res.status(500).json({ message: "API eksternal gagal mengambil data" });
