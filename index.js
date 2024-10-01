@@ -91,6 +91,7 @@ app.get("/api/listewallet", async (req, res) => {
   }
 });
 
+// Definisikan route
 app.get("/api/ewalletaccount", async (req, res) => {
   const { bankCode, accountNumber } = req.query;
 
@@ -109,25 +110,47 @@ app.get("/api/ewalletaccount", async (req, res) => {
     if (response.data.status) {
       const { bankcode, accountnumber, accountname } = response.data.data;
 
-      // Simpan data ke Supabase
-      const { data, error } = await supabase
+      // Cek apakah data sudah ada di Supabase
+      const { data: existingData, error: fetchError } = await supabase
         .from('ewallet_accounts')
-        .insert([
-          { 
-            bank_code: bankcode, 
-            account_number: accountnumber, 
-            account_name: accountname 
-          }
-        ]);
+        .select('*')
+        .eq('bank_code', bankcode)
+        .eq('account_number', accountnumber);
 
-      if (error) {
-        console.error('Error inserting data to Supabase:', error);
-        // Anda bisa memilih untuk mengembalikan error atau tetap mengembalikan response API eksternal
-        return res.status(500).json({ message: "Error saving data to database" });
+      if (fetchError) {
+        console.error('Error fetching data from Supabase:', fetchError);
+        return res.status(500).json({ message: "Error checking existing data in database" });
       }
 
-      // Kembalikan response API eksternal
-      return res.json(response.data);
+      // Jika data belum ada, lakukan insert
+      if (existingData.length === 0) {
+        const { data, error } = await supabase
+          .from('ewallet_accounts')
+          .insert([
+            { 
+              bank_code: bankcode, 
+              account_number: accountnumber, 
+              account_name: accountname 
+            }
+          ]);
+
+        if (error) {
+          console.error('Error inserting data to Supabase:', error);
+          return res.status(500).json({ message: "Error saving data to database" });
+        }
+
+        // Kembalikan response API eksternal
+        return res.json({
+          message: "Data saved successfully",
+          data: response.data
+        });
+      } else {
+        // Jika data sudah ada
+        return res.json({
+          message: "Data already exists, no need to save",
+          data: existingData[0] // Mengembalikan data yang sudah ada
+        });
+      }
     } else {
       // Jika API eksternal mengembalikan status false
       return res.status(500).json({ message: "API eksternal gagal mengambil data" });
@@ -137,6 +160,7 @@ app.get("/api/ewalletaccount", async (req, res) => {
     res.status(500).json({ message: "Error fetching bank account data" });
   }
 });
+
 app.get("/api/listbank", async (req, res) => {
   try {
     const response = await axios.get(
