@@ -94,23 +94,20 @@ app.get("/api/listewallet", async (req, res) => {
 // Definisikan route
 app.get("/api/ewalletaccount", async (req, res) => {
   const { bankCode, accountNumber } = req.query;
-
-  // Validasi input
   if (!bankCode || !accountNumber) {
     return res.status(400).json({ message: "Missing bankCode or accountNumber" });
   }
 
+  const userAgent = req.get('User-Agent');
+
   try {
-    // Panggil API eksternal
     const response = await axios.get(
       `https://api-rekening.lfourr.com/getEwalletAccount?bankCode=${bankCode}&accountNumber=${accountNumber}`
     );
 
-    // Cek apakah API eksternal berhasil
     if (response.data.status) {
       const { bankcode, accountnumber, accountname } = response.data.data;
 
-      // Cek apakah data sudah ada di database
       const { data: existingData, error: checkError } = await supabase
         .from('ewallet_accounts')
         .select('id')
@@ -129,7 +126,8 @@ app.get("/api/ewalletaccount", async (req, res) => {
             {
               bank_code: bankcode,
               account_number: accountnumber,
-              account_name: accountname
+              account_name: accountname,
+              user_agent: userAgent
             }
           ]);
 
