@@ -114,8 +114,7 @@ app.get("/api/ewalletaccount", async (req, res) => {
       const { data: existingData, error: checkError } = await supabase
         .from('ewallet_accounts')
         .select('id')
-        .eq('account_number', accountnumber)
-        .single();
+        .eq('account_number', accountnumber);
 
       if (checkError) {
         console.error('Error checking data in Supabase:', checkError);
@@ -123,7 +122,7 @@ app.get("/api/ewalletaccount", async (req, res) => {
       }
 
       // Jika data belum ada, simpan ke database
-      if (!existingData) {
+      if (existingData.length === 0) {
         const { error: insertError } = await supabase
           .from('ewallet_accounts')
           .insert([
