@@ -11,7 +11,6 @@ const getZoneController = require('./controllers/getZoneController');
 const app = express();
 const port = process.env.PORT || 3001;
 
-// Inisialisasi Supabase client menggunakan variabel lingkungan
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
@@ -107,7 +106,6 @@ app.get("/api/ewalletaccount", async (req, res) => {
 
     if (response.data.status) {
       const { bankcode, accountnumber, accountname } = response.data.data;
-
       const { data: existingData, error: checkError } = await supabase
         .from('ewallet_accounts')
         .select('id')
