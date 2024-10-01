@@ -4,11 +4,17 @@ const cors = require('cors');
 const { cekIdGameController } = require('./controllers/cekIdGameController');
 const _ = require('lodash');
 const path = require('path');
+const { createClient } = require('@supabase/supabase-js');
 const { dataGame } = require('./lib/dataGame');
 const getZoneController = require('./controllers/getZoneController');
 
 const app = express();
 const port = process.env.PORT || 3001;
+
+// Inisialisasi Supabase client menggunakan variabel lingkungan
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 app.use(express.json());
 app.use(express.static('public'));
@@ -88,20 +94,49 @@ app.get("/api/listewallet", async (req, res) => {
 app.get("/api/ewalletaccount", async (req, res) => {
   const { bankCode, accountNumber } = req.query;
 
+  // Validasi input
   if (!bankCode || !accountNumber) {
     return res.status(400).json({ message: "Missing bankCode or accountNumber" });
   }
 
   try {
+    // Panggil API eksternal
     const response = await axios.get(
       `https://api-rekening.lfourr.com/getEwalletAccount?bankCode=${bankCode}&accountNumber=${accountNumber}`
     );
-    res.json(response.data);
+
+    // Cek apakah API eksternal berhasil
+    if (response.data.status) {
+      const { bankcode, accountnumber, accountname } = response.data.data;
+
+      // Simpan data ke Supabase
+      const { data, error } = await supabase
+        .from('ewallet_accounts')
+        .insert([
+          { 
+            bank_code: bankcode, 
+            account_number: accountnumber, 
+            account_name: accountname 
+          }
+        ]);
+
+      if (error) {
+        console.error('Error inserting data to Supabase:', error);
+        // Anda bisa memilih untuk mengembalikan error atau tetap mengembalikan response API eksternal
+        return res.status(500).json({ message: "Error saving data to database" });
+      }
+
+      // Kembalikan response API eksternal
+      return res.json(response.data);
+    } else {
+      // Jika API eksternal mengembalikan status false
+      return res.status(500).json({ message: "API eksternal gagal mengambil data" });
+    }
   } catch (error) {
+    console.error('Error fetching bank account data:', error);
     res.status(500).json({ message: "Error fetching bank account data" });
   }
 });
-
 app.get("/api/listbank", async (req, res) => {
   try {
     const response = await axios.get(
