@@ -11,8 +11,8 @@ const getZoneController = require('./controllers/getZoneController');
 const app = express();
 const port = process.env.PORT || 3001;
 
-const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL
-const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY
+const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseKey = import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 app.use(express.json());
