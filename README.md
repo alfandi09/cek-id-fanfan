@@ -42,7 +42,7 @@ SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.xxxxxx.xxxxxx"
 SUPABASE_URL=your_project_url
 SUPABASE_ANON_KEY=your_anon_key
 
-// Di kode JavaScript
+// Di kode JavaScript( index.js atau semacamnya)
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_ANON_KEY
