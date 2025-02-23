@@ -42,6 +42,11 @@ app.get('/api/total-hits', (req, res) => {
    res.json({ totalHits: apiHits });
 });
 
+// Route untuk favicon
+app.get('/favicon.ico', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'favicon.ico'));
+});
+
 app.get('/api', (req, res) => {
    const currentTime = Date.now();
 
