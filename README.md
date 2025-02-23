@@ -17,6 +17,9 @@ Gapunya VPS? Gapunya Hosting Node? Tenang, Bisa hosting Gratisan di vercel
  - Import Project
 
 
+udah support heroku ya
+cuma perlu buildpak nodejs doang
+
 kalo masih ada pertanyaan/ada bug, silahkan chat, nanti tak bantu install
 
 
